@@ -1,0 +1,131 @@
+<app-header></app-header>
+<div class="container mt-5">
+  <div class="row">
+    <div class="card">
+      <button type="button" class="btn btn-outline-primary"  data-bs-toggle="modal" data-bs-target="#formAgregar">Agregar</button>
+      <div class="card-body text-center">
+        <h1 class="titulo">productos</h1>
+        <table *ngIf="productos.length > 0" class="table table-striped mt-3">
+          <thead>
+            <tr>
+              <th scope="col">ID de referencia</th>
+              <th scope="col">Referencia</th>
+              <th scope="col">Descripción</th>
+              <th scope="col">Color</th>
+              <th scope="col">Proveedor</th>
+              <th scope="col">Precio</th>
+              <th scope="col">Estado</th>
+              <th scope="col">Acciones</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let producto of productos | paginate: { itemsPerPage: 5, currentPage: pages }">
+              <td>{{ producto.idReferencia }}</td>
+              <td>{{ producto.referencia }}</td>
+              <td>{{ producto.descripcion }}</td>
+              <td>{{ producto.color }}</td>
+              <td>{{ producto.proveedor }}</td>
+              <td>{{ producto.precio }}</td>
+              <td>{{ producto.estado }}</td>
+              <td>
+                <button routerLink="/producto/{{producto.idReferencia}}" type="button"
+                  class="btn btn-outline-warning">Editar</button>
+
+                  <button type="button"
+                  (click)="eliminarProducto(producto.idReferencia)"
+                  class="btn btn-outline-danger m-1">Eiminar</button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+        <pagination-controls previousLabel="Anterior" nextLabel="Siguiente" (pageChange)="pages = $event">
+        </pagination-controls>
+        <h5 style="text-align: start; margin-top: 10px;" *ngIf="productos.length == 0">No hay productos
+        </h5>
+      </div>
+    </div>
+  </div>
+</div>
+<app-footer></app-footer>
+
+<!-- Modal productos -->
+<div class="modal fade" id="formAgregar" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="staticBackdropLabel">Agregar producto</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form [formGroup]="agregarForm"  (submit)="crearProducto()" novalidate>         
+          <div class="mb-3">
+            <label for="idReferencia" class="form-label">ID dereferencia</label>
+            <input type="number" class="form-control" id="idReferencia" formControlName="idReferencia">
+          </div>
+          <div class="error-message" *ngIf="!agregarForm.controls.idReferencia.valid  && agregarForm.controls.idReferencia.dirty">
+            <p style="color: red;">Este campo es un campo requerido</p>
+          </div>
+
+          <div class="mb-3">
+            <label for="referencia" class="form-label">Referencia</label>
+            <input type="text" class="form-control" id="referencia" formControlName="referencia">
+          </div>
+          <div class="error-message" *ngIf="!agregarForm.controls.referencia.valid  && agregarForm.controls.referencia.dirty">
+            <p style="color: red;">Este campo es un campo requerido</p>
+          </div>
+
+          <div class="mb-3">
+            <label for="descripcion" class="form-label">Descripcion</label>
+            <input type="text" class="form-control" id="descripcion" formControlName="descripcion">
+          </div> 
+          <div class="error-message" *ngIf="!agregarForm.controls.descripcion.valid  && agregarForm.controls.descripcion.dirty">
+            <p style="color: red;">Este campo es un campo requerido</p>
+          </div>
+
+          <div class="mb-3">
+            <label for="color" class="form-label">Color: </label>
+            <select class="form-select" aria-label="color" formControlName="color">
+              <option value="Negro">Negro</option>
+              <option value="Blanco">Blanco</option>
+            </select>
+          </div> 
+          <div class="error-message" *ngIf="!agregarForm.controls.color.valid  && agregarForm.controls.color.dirty">
+            <p style="color: red;">Este campo es un campo requerido</p>
+          </div>
+          
+          <div class="mb-3">
+            <label for="proveedor" class="form-label">Proveedor</label>
+            <input type="text" class="form-control" id="proveedor" formControlName="proveedor">
+          </div> 
+          <div class="error-message" *ngIf="!agregarForm.controls.proveedor.valid  && agregarForm.controls.proveedor.dirty">
+            <p style="color: red;">Este campo es un campo requerido</p>
+          </div>
+          
+          <div class="mb-3">
+            <label for="precio" class="form-label">Precio</label>
+            <input type="number" class="form-control" id="precio" formControlName="precio">
+          </div>
+          <div class="error-message" *ngIf="!agregarForm.controls.precio.valid  && agregarForm.controls.precio.dirty">
+            <p style="color: red;">Este campo es un campo requerido</p>
+          </div>
+
+          <div class="mb-3">
+            <label for="estado" class="form-label">Estado: </label>
+            <select class="form-select" aria-label="estado" formControlName="estado">
+              <option value="activo">Activo</option>
+              <option value="inactivo">Inactivo</option>
+            </select>
+          </div>
+          <div class="error-message" *ngIf="!agregarForm.controls.estado.valid  && agregarForm.controls.estado.dirty">
+            <p style="color: red;">Este campo es un campo requerido</p>
+          </div>
+
+        </form>  
+      </div>
+      <div class="modal-footer">
+        <button type="button" #cerrarForm class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+        <button type="button" class="btn btn-primary" (click)="crearProducto()">Crear</button>
+      </div>
+    </div>
+  </div>
+</div>
